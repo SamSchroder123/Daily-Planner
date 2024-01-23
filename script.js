@@ -72,6 +72,7 @@ function createTask(paramObj2) {
   var hourBlock = $("#" + paramObj2.data.idParam);
   var task = $("#task");
   console.log(task.val());
+  localStorage.setItem(paramObj2.data.clickMeId, task.val());
   hourBlock.find("#" + paramObj2.data.clickMeId).text(task.val());
   var overlay = $("#overlay");
   overlay.attr("class", "d-none");
