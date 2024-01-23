@@ -5,8 +5,8 @@ var hour = dayjs().format("H");
 console.log(date);
 currentDay.text(date);
 
-let startHour = 8;
-let endHour = 20;
+let startHour = 9;
+let endHour = 17;
 
 var difference = endHour - startHour;
 
@@ -15,7 +15,7 @@ for (let i = startHour; i < endHour + 1; i++) {
   //create hour block div
   var hourBlock = $("<div>");
   var id = "hourBlock" + i;
-  var classes = "d-flex hourBlock";
+  var classes = "d-flex hourBlock my-1";
   hourBlock.attr("class", classes);
   //   console.log(hourBlock.attr("class"));
   hourBlock.attr("id", id);
@@ -40,7 +40,18 @@ for (let i = startHour; i < endHour + 1; i++) {
   //create click me p
   var clickMe = $("<p>");
   var clickMeIdGlobal = "clickMe" + i;
-  clickMe.text("Click anywhere on this hourblock to set a task!");
+  var clickMeText = "";
+  try {
+    clickMeText = localStorage.getItem(clickMeIdGlobal);
+    // console.log(clickMeText);
+    if (clickMeText == null) {
+      clickMeText = "Click anywhere on this hourblock to set a task!";
+    }
+  } catch (error) {
+    console.error(error);
+    clickMeText = "Click anywhere on this hourblock to set a task!";
+  }
+  clickMe.text(clickMeText);
   clickMe.attr("class", "ms-auto my-auto");
   clickMe.attr("id", clickMeIdGlobal);
 
@@ -50,6 +61,15 @@ for (let i = startHour; i < endHour + 1; i++) {
   hourBlock.append(time);
   hourBlock.append(clickMe);
   container.append(hourBlock);
+}
+
+var clearButton = $("#clear");
+clearButton.click(clearTasks);
+
+function clearTasks() {
+  console.log("clearing storage");
+  localStorage.clear();
+  window.location.href = "./index.html";
 }
 
 function taskOverlay(paramObj) {
@@ -72,6 +92,7 @@ function createTask(paramObj2) {
   var hourBlock = $("#" + paramObj2.data.idParam);
   var task = $("#task");
   console.log(task.val());
+  localStorage.setItem(paramObj2.data.clickMeId, task.val());
   hourBlock.find("#" + paramObj2.data.clickMeId).text(task.val());
   var overlay = $("#overlay");
   overlay.attr("class", "d-none");
