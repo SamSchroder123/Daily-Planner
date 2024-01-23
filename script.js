@@ -5,7 +5,7 @@ var hour = dayjs().format("H");
 console.log(date);
 currentDay.text(date);
 
-let startHour = 9;
+let startHour = 8;
 let endHour = 17;
 
 var difference = endHour - startHour;
@@ -39,10 +39,35 @@ for (let i = startHour; i < endHour + 1; i++) {
 
   //create click me p
   var clickMe = $("<p>");
-  clickMe.text("Click me to set task!");
-  clickMe.attr("class", "mx-auto my-auto");
+  var clickMeIdGlobal = "clickMe" + i;
+  clickMe.text("Click anywhere on this hourblock to set a task!");
+  clickMe.attr("class", "ms-auto my-auto");
+  clickMe.attr("id", clickMeIdGlobal);
+
+  //trigger createTask() when hourBlock is clicked
+  hourBlock.click({ idParam: id, clickMeId: clickMeIdGlobal }, taskOverlay);
   //append elements
   hourBlock.append(time);
   hourBlock.append(clickMe);
   container.append(hourBlock);
+}
+
+function taskOverlay(paramObj) {
+  var overlay = $("#overlay");
+  var submitButton = $("#submit");
+  var id = paramObj.data.idParam;
+  var clickMeId = paramObj.data.clickMeId;
+  console.log(hourBlock);
+  overlay.attr("class", "d-flex");
+  submitButton.click({ idParam: id, clickMeId: clickMeId }, createTask);
+}
+
+function createTask(paramObj2) {
+  console.log("paramObj2.data.idParam: " + paramObj2.data.idParam);
+  var hourBlock = $("#" + paramObj2.data.idParam);
+  var task = $("#task");
+  console.log(task.val());
+  hourBlock.find("#" + paramObj2.data.clickMeId).text(task.val());
+  var overlay = $("#overlay");
+  overlay.attr("class", "d-none");
 }
